@@ -4,7 +4,11 @@
     <base href="/">
     <meta charset="utf-8">
     <title>HakSGames</title>
+    <meta property="og:title" content="HakSGames" >
+    <meta property="og:description"
+          content="This page contains some classic logical and simple games, those kind of un-complex but addictive games!" >
     <meta name="description" content="">
+    <meta name="twitter:card" content="summary" >
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
@@ -25,13 +29,6 @@
       <header>
         <a ng-href="/" class="main-logo"></a>
       </header>
-      <!-- <nav class="main-menu">
-          <ul>
-            <li class="active"><a href="/">Home</a></li>
-            <li><a ng-href="/about">About</a></li>
-            <li><a ng-href="/">Contact</a></li>
-          </ul>
-      </nav> -->
     </div>
 
     <div class="main-body">
@@ -57,13 +54,14 @@
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/games/hanoi.js"></script>
         <!-- endbuild -->
 </body>
 </html>

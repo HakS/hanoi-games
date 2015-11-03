@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc function
- * @name haksGamesApp.controller:AboutCtrl
+ * @name haksGamesApp.controller:HanoiCtrl
  * @description
- * # AboutCtrl
+ * # HanoiCtrl
  * Controller of the haksGamesApp
  */
 angular.module('haksGamesApp')
-  .controller('AboutCtrl', function () {
-    this.awesomeThings = [
+  .controller('HanoiCtrl', function ($scope) {
+    $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
