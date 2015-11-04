@@ -1,15 +1,13 @@
-<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce semper ultricies dui. Suspendisse accumsan libero ac erat elementum suscipit. Nunc bibendum sit amet diam at tempus. Duis tincidunt lacus tortor, non gravida ante aliquet sit amet. In hac habitasse platea dictumst. Morbi lobortis felis nec cursus porttitor. Nunc condimentum sapien ut sem elementum tempus. Maecenas hendrerit ultrices lectus.
-</p>
-<p>
-Phasellus sit amet magna purus. Maecenas cursus sit amet est eget pellentesque. Donec eu interdum erat, at egestas elit. Nulla semper libero sed massa maximus, ac cursus dolor accumsan. Vestibulum non malesuada justo, a rutrum quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vestibulum orci vel nunc finibus, eu iaculis ipsum sodales. Sed elementum lectus id risus porttitor, in tincidunt turpis posuere. Aenean sodales ut elit nec venenatis. Etiam sodales rutrum orci, vitae iaculis nunc varius ut. Integer egestas massa nibh, non suscipit nibh varius ut. Pellentesque feugiat arcu id hendrerit suscipit. Pellentesque sapien nunc, tincidunt vel massa luctus, congue finibus massa. Etiam volutpat, ligula nec pretium semper, dolor nunc imperdiet velit, et lobortis ipsum magna at nunc. Cras auctor enim laoreet diam faucibus mattis. Phasellus vestibulum fringilla eros.
-</p>
-<p>
-Pellentesque in ex quam. Duis suscipit dapibus urna eget pulvinar. Quisque finibus nec augue et vehicula. Nullam quis sem eu elit consequat ullamcorper id id magna. Mauris rhoncus leo vitae est ultrices lacinia. Praesent pellentesque enim eget faucibus molestie. Vivamus sit amet eros accumsan, gravida mi vitae, hendrerit dui. Aenean vitae porta odio. Etiam sollicitudin tempus eros, in mattis dui efficitur sit amet. Nulla sit amet massa tortor. Donec maximus blandit purus, quis tincidunt metus volutpat ut. Quisque suscipit vel lectus nec rutrum. Donec posuere velit sit amet interdum rhoncus. Sed eleifend leo ligula, id gravida ipsum ultricies sit amet. Integer ultricies, lorem vitae vulputate bibendum, tortor nulla auctor ante, id ultricies arcu arcu a mauris. Nullam dapibus felis fermentum arcu lacinia, sed hendrerit dui pretium.
-</p>
-<p>
-Mauris auctor erat a blandit cursus. In pulvinar, lorem non finibus semper, mauris risus pellentesque lectus, at dapibus ipsum odio eu lectus. In porttitor diam sit amet egestas mollis. Suspendisse eu molestie lacus. Sed nec pulvinar nulla, et consequat elit. Proin lorem mi, maximus vel iaculis a, cursus nec libero. Vestibulum facilisis, diam nec consequat placerat, ante libero egestas libero, sit amet dignissim ante lacus eu eros. Maecenas fermentum placerat egestas. Pellentesque lectus tellus, hendrerit nec lectus at, tempor convallis eros.
-</p>
-<p>
-Donec tincidunt, turpis sit amet ultrices lacinia, nulla nunc tempor tortor, vel molestie tortor ligula eu ante. Vestibulum sed enim erat. Phasellus nec semper diam. Nullam a nulla mi. Curabitur accumsan tincidunt metus, in tempus ex lobortis sed. Vestibulum congue hendrerit sodales. Vivamus vel nibh vel magna aliquet ullamcorper quis quis felis.
-</p>
+<section class="game-list">
+    <article class="game-preview" ng-repeat="game in games | orderBy:'title' ">
+        <header class="game-preview--title">
+            <h2>{{ game.title }}</h2>
+        </header>
+        <figure class="game-preview--img">
+            <img ng-src="/images/games/{{ game.id }}/logo.jpg"
+                 alt="The boat as seen through the rocks at the Baths on Virgin Gorda.">
+        </figure>
+        <a ng-href="#/game/{{ game.id }}"></a>
+    </article>
+</section>
+

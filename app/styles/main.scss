@@ -3,13 +3,19 @@
 @import "normalize.scss/_normalize.scss";
 // endbower
 
+@import "gameList";
+
 // @include edit;
 
 header, nav, main, section, aside, footer, div {
-  overflow: hidden;
+  //overflow: hidden;
 }
-header, main, footer {
-  @include center(1410px, 20px);
+.main >{
+  header, main, footer {
+    @include center(1410px, 20px);
+    //@media (min-width: 768px) {
+    //}
+  }
 }
 
 .main-logo {
@@ -23,45 +29,12 @@ header, main, footer {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   position: fixed;
+  top: 0;
   background: white;
   width: 100%;
+  z-index: 99;
 }
 .main-body {
   background: #efefef;
-  main {
-    margin-top: 70px;
-  }
+  margin-top: 70px;
 }
-
-// nav.main-menu {
-//   ul {
-//     padding: 0;
-//     margin: 0;
-//     li{
-//       display: inline-block;
-//       padding: 0.8em 1em;
-//       background: white;
-//     }
-//   }
-// }
-// main.main-body {
-//   display: flex;
-//   flex-direction: column;
-// }
-
-// aside.main-sidebar {
-//   order: 1;
-// }
-//
-// @media (min-width: 768px) {
-//   main.main-body {
-//     flex-direction: row;
-//   }
-//   section.main-content {
-//     flex: 1;
-//   }
-//   aside.main-sidebar {
-//     flex: 0 0 12em;
-//     order: -1;
-//   }
-// }

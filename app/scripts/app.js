@@ -9,45 +9,67 @@
  * Main module of the application.
  */
 angular
-  .module('haksGamesApp', [
-    'ngRoute'
-  ])
-  //.config(function ($routeProvider, $locationProvider) {
-  .config(
-    function ($routeProvider) {
-      //var initGame = function(game) {
-      //  var gameController = game.machineName.charAt(0).toUpperCase() + game.machineName.slice(1);
-      //  $routeProvider
-      //      .when(game.route, {
-      //        templateUrl: 'views/games/' + game.machineName + '.html',
-      //        controller: gameController,
-      //        controllerAs: game.machineName
-      //      });
-      //  $rootScope.games.push(game);
-      //};
-      $routeProvider
-        .when('/', {
-          templateUrl: 'views/main.html',
-          controller: 'MainCtrl',
-          controllerAs: 'main'
-        })
-        // Games
-        .when('/hanoi', {
-          templateUrl: 'views/games/hanoi.html',
-          controller: 'HanoiCtrl',
-          controllerAs: 'hanoi',
-          title: 'Hanoi Towers'
-        })
-        .otherwise({
-          redirectTo: '/'
-        });
-      //if (window.history && window.history.pushState) {
-      //  $locationProvider.html5Mode(true);
-      //}
-
-      //initGame({
-      //  name: 'hanoi',
-      //  title: 'Hanoi Towers'
-      //});
-    }
-  );
+    .module('haksGamesApp', ['ngRoute'])
+    .config(function ($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'views/main.html',
+                controller: 'MainCtrl',
+                controllerAs: 'main'
+            })
+            .when('/game/:gameId', {
+                templateUrl: 'views/game-page.html',
+                controller: 'GamePageCtrl',
+                controllerAs: 'gamePage',
+            })
+            //.when('/game/hanoi', {
+            //    templateUrl: 'views/games/hanoi.html',
+            //    controller: 'HanoiCtrl',
+            //    controllerAs: 'hanoi',
+            //    game: 'Hanoi Towers'
+            //})
+            //.when('/game/maze', {
+            //    templateUrl: 'views/games/maze.html',
+            //    controller: 'MazeCtrl',
+            //    controllerAs: 'maze',
+            //    game: 'The Maze'
+            //})
+            //.when('/game/tictactoe', {
+            //    templateUrl: 'views/games/tictactoe.html',
+            //    controller: 'TictactoeCtrl',
+            //    controllerAs: 'tictactoe',
+            //    game: 'Tic-Tac-Toe'
+            //})
+            //.when('/game/tetris', {
+            //    templateUrl: 'views/games/tetris.html',
+            //    controller: 'TetrisCtrl',
+            //    controllerAs: 'tetris',
+            //    game: 'Tetris'
+            //})
+            .otherwise({
+                redirectTo: '/'
+            });
+            //if (window.history && window.history.pushState) {
+            //    $locationProvider.html5Mode(true);
+            //}
+    })
+    .run(function ($rootScope) {
+        $rootScope.games = [
+            {
+                id: 'hanoi',
+                title: 'Hanoi Towers'
+            },
+            {
+                id: 'maze',
+                title: 'The Maze!'
+            },
+            {
+                id: 'tetris',
+                title: 'Tetris'
+            },
+            {
+                id: 'tictactoe',
+                title: 'Tic-Tac-Toe'
+            }
+        ];
+    });
