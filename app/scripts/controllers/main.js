@@ -30,4 +30,14 @@ angular.module('haksGamesApp')
                 element.append($compile("<" + gameId + "-game />")(scope));
             }
         };
+    })
+    .directive('googleAds', function() {
+        return {
+            restrict: 'A',
+            replace: true,
+            templateUrl: 'views/googleAds.html',
+            controller: function () {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            }
+        };
     });
