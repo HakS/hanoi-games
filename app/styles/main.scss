@@ -3,12 +3,15 @@
 @import "normalize.scss/_normalize.scss";
 // endbower
 
+// Initial settings
+@import "compass";
+@include font-face("pixelmixregular", font-files("pixelmix/pixelmix-webfont.ttf", "pixelmix/pixelmix-webfont.otf"));
+
+// Styles
 @import "gameList";
 
-// @include edit;
-
-header, nav, main, section, aside, footer, div {
-  //overflow: hidden;
+body {
+  font-family: "pixelmixregular";
 }
 .main >{
   header, main, footer {
