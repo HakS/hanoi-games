@@ -11,27 +11,43 @@
 angular.module('haksGamesApp')
     .directive('hanoiGame', function($compile) {
 
-        //var Animal = (function() {
-        //    function Animal(name) {
-        //        this.name = name;
-        //    }
-        //
-        //    Animal.prototype.move = function(meters) {
-        //        return alert(this.name + (" moved " + meters + "m."));
-        //    };
-        //
-        //    return Animal;
-        //
-        //})();
-        //
-        //var sam = new Animal("Sammy the Python");
-        //sam.move();
+        var SpriteContainer = (function() {
+            function SpriteContainer(dimensions, image) {
+                var sc = this;
+                sc.dimensions = dimensions;
+                sc.imageReady = false;
+                sc.spriteImage = new Image();
+                if (image === undefined) {
+                    sc.spriteImage.src = "images/games/hanoi/sprites.gif"
+                }
+                else {
+                    sc.spriteImage.src = "images/games/hanoi/" + image;
+                }
+                sc.spriteImage.onload = function () {
+                    sc.imageReady = true;
+                };
+            }
+            SpriteContainer.prototype.draw = function(position, ctx) {
+                if (this.imageReady) {
+                    ctx.mozImageSmoothingEnabled = false;
+                    ctx.webkitImageSmoothingEnabled = false;
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.drawImage(
+                        this.spriteImage,
+                        this.dimensions.x,
+                        this.dimensions.y,
+                        this.dimensions.width,
+                        this.dimensions.height,
+                        position.x * 2,
+                        position.y * 2,
+                        this.dimensions.width * 2,
+                        this.dimensions.height * 2
+                    );
+                }
+            };
 
-        //var SpriteContainer = (function() {
-        //    function SpriteContainer(name, ) {
-        //
-        //    }
-        //});
+            return SpriteContainer;
+        })();
 
         var renderGame = function(scope, element) {
             var canvasCompile = $compile('<canvas></canvas>')(scope);
@@ -39,55 +55,45 @@ angular.module('haksGamesApp')
 
             var canvas = canvasCompile[0];
             var ctx = canvas.getContext("2d");
+
             canvas.width = 1024;
             canvas.height = 800;
 
-
-            // Sprite image
-            var spriteReady = false;
-            var spriteImage = new Image();
-            spriteImage.onload = function () {
-                spriteReady = true;
-            };
-            spriteImage.src = "images/games/hanoi/sprites.gif";
-
-
-
-
-            // Hero image
-            var heroReady = false;
-            var heroImage = new Image();
-            heroImage.onload = function () {
-                heroReady = true;
-            };
-            heroImage.src = "images/games/hanoi/hero.png";
-
-            // Monster image
-            var monsterReady = false;
-            var monsterImage = new Image();
-            monsterImage.onload = function () {
-                monsterReady = true;
-            };
-            monsterImage.src = "images/games/hanoi/monster.png";
+            // Handle keyboard controls
+            var keysDown = {};
+            addEventListener("keydown", function (e) {
+                keysDown[e.keyCode] = true;
+                e.preventDefault();
+            }, false);
+            addEventListener("keyup", function (e) {
+                delete keysDown[e.keyCode];
+            }, false);
 
             // Game objects
+            var hanoiPlatform = new SpriteContainer({x: 110, y: 74, width: 436, height: 181});
+            var background = new SpriteContainer({x: 553, y: 130, width: 126, height: 126});
+            var hanoiBlocks = [
+                {enabled: false, x: 138, y: 144, sprite: new SpriteContainer({x: 0, y: 53, width: 34, height: 14})},
+                {enabled: false, x: 135, y: 154, sprite: new SpriteContainer({x: 0, y: 67, width: 42, height: 17})},
+                {enabled: false, x: 132, y: 164, sprite: new SpriteContainer({x: 0, y: 84, width: 48, height: 19})},
+                {enabled: false, x: 128, y: 174, sprite: new SpriteContainer({x: 0, y: 103, width: 56, height: 21})},
+                {enabled: false, x: 125, y: 184, sprite: new SpriteContainer({x: 0, y: 124, width: 64, height: 26})},
+                {enabled: false, x: 118, y: 194, sprite: new SpriteContainer({x: 0, y: 150, width: 79, height: 31})},
+                {enabled: false, x: 112, y: 204, sprite: new SpriteContainer({x: 0, y: 181, width: 90, height: 35})},
+                {enabled: false, x: 105, y: 214, sprite: new SpriteContainer({x: 0, y: 216, width: 105, height: 40})}
+            ];
+            var currentGame = [[], [], []];
+            var currentLevel = 8;
+            for (var i = 0; i < currentLevel; i++) {
+                currentGame[0].push(i);
+                hanoiBlocks[i].enabled = true;
+            }
+
             var hero = {
                 speed: 256 // movement in pixels per second
             };
             var monster = {};
             var monstersCaught = 0;
-
-            // Handle keyboard controls
-            var keysDown = {};
-
-            addEventListener("keydown", function (e) {
-                keysDown[e.keyCode] = true;
-                e.preventDefault();
-            }, false);
-
-            addEventListener("keyup", function (e) {
-                delete keysDown[e.keyCode];
-            }, false);
 
             // Reset the game when the player catches a monster
             var reset = function () {
@@ -128,27 +134,27 @@ angular.module('haksGamesApp')
 
             // Draw everything
             var render = function () {
-                if (spriteReady) {
-                    ctx.drawImage(spriteImage, 0, 0);
+                for (var i = 0; i <= canvas.height; i += 126) {
+                    for (var j = 0; j <= canvas.width; j += 126) {
+                        background.draw({x: j, y: i}, ctx);
+                    }
                 }
-
-
-
-
-
-                if (heroReady) {
-                    ctx.drawImage(heroImage, hero.x, hero.y);
-                }
-                if (monsterReady) {
-                    ctx.drawImage(monsterImage, monster.x, monster.y);
+                hanoiPlatform.draw({x: 40, y: 110}, ctx);
+                for (var i = 0; i < currentGame.length; i++) {
+                    for (var j = currentGame[i].length - 1; j >= 0 ; j--) {
+                        if (hanoiBlocks[currentGame[i][j]].enabled) {
+                            var item = hanoiBlocks[currentGame[i][j]];
+                            item.sprite.draw({x: item.x, y: item.y}, ctx);
+                        }
+                    }
                 }
 
                 // Score
                 ctx.fillStyle = "rgb(250, 250, 250)";
-                ctx.font = "24px Helvetica";
+                ctx.font = "24px pixelmixregular";
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
-                ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
+                ctx.fillText("Test text", 32, 32);
             };
 
             // The main game loop
