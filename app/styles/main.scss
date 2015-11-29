@@ -9,13 +9,19 @@
 
 // Styles
 @import "gameList";
+@import "gamePage";
 
 body {
   font-family: "pixelmixregular";
 }
 .main >{
-  header, main, footer {
+  header, footer {
     @include center(1410px, 20px);
+    //@media (min-width: 768px) {
+    //}
+  }
+  main {
+    @include center(none, 0);
     //@media (min-width: 768px) {
     //}
   }

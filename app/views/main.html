@@ -1,11 +1,11 @@
 <section class="game-list">
     <article class="game-preview" ng-repeat="game in games | orderBy:'title' ">
-        <header class="game-preview--title">
-            <h2>{{ game.title }}</h2>
-        </header>
         <figure class="game-preview--img">
             <img ng-src="/images/games/{{ game.id }}/logo.jpg">
         </figure>
+        <header class="game-preview--title">
+            <h2>{{ game.title }}</h2>
+        </header>
         <a ng-href="#/game/{{ game.id }}"></a>
     </article>
     <!--<article class="game-preview">-->
