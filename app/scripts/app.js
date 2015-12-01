@@ -9,7 +9,8 @@
  * Main module of the application.
  */
 angular
-    .module('haksGamesApp', ['ngRoute'])
+    .module('haksGamesApp', ['ngRoute', 'djds4rce.angular-socialshare'])
+    //.config(function ($routeProvider, $locationProvider) {
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
@@ -50,7 +51,7 @@ angular
                 redirectTo: '/'
             });
             //if (window.history && window.history.pushState) {
-            //    $locationProvider.html5Mode(true);
+            //    $locationProvider.html5Mode(true).hashPrefix('!');
             //}
     })
     .run(function ($rootScope) {

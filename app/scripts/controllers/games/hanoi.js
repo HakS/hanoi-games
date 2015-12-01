@@ -14,7 +14,9 @@ angular.module('haksGamesApp')
             var debug = false;
 
             var canvasCompile = $compile('<canvas></canvas>')(scope);
-            element.append(canvasCompile);
+            var gameWrapper = $compile('<div class="game-container"></div>')(scope);
+            gameWrapper.append(canvasCompile);
+            element.prepend(gameWrapper);
 
             var canvas = canvasCompile[0];
             var ctx = canvas.getContext("2d");
@@ -133,6 +135,7 @@ angular.module('haksGamesApp')
             var currentLevel = 0, previousColumn = 0, currentColumn = 0, currentBlockIndex = 0, moves = 0, lvlAnimCount = 0;
             var switchColumnChange = false, animating = false, valid = false, changedColumn = false, validated = false, lvlAnim = false;
             var editGame = true;
+            var resetGame = false;
 
             var reset = function (level) {
                 hanoiBlocks[0].x = 139; hanoiBlocks[0].y = 144;
@@ -198,6 +201,9 @@ angular.module('haksGamesApp')
             };
 
             var updateKeys = function () {
+                if (82 in keysDown) {
+                    resetGame = true;
+                }
                 if (!animating) {
                     if (38 in keysDown || 87 in keysDown) { // Player holding up
                         hanoiAnimations = [true, false, false, false];
@@ -224,130 +230,136 @@ angular.module('haksGamesApp')
                 return valid;
             };
             var update = function () {
-                var limit = 107;
-                if (hanoiAnimations[0]) {
-                    if (!switchColumnChange && currentBlockIndex != undefined) {
-                        var height = (currentLevel - currentGame[currentColumn].length) * 10;
-                        var overHeight = height + 20;
-                        if ((hanoiBlocks[currentBlockIndex].y - 2) > (hanoiBlocks[currentBlockIndex].initialY - overHeight)) {
-                            hanoiBlocks[currentBlockIndex].y -= 2;
-                            animating = true;
+                if (!resetGame) {
+                    var limit = 107;
+                    if (hanoiAnimations[0]) {
+                        if (!switchColumnChange && currentBlockIndex != undefined) {
+                            var height = (currentLevel - currentGame[currentColumn].length) * 10;
+                            var overHeight = height + 20;
+                            if ((hanoiBlocks[currentBlockIndex].y - 2) > (hanoiBlocks[currentBlockIndex].initialY - overHeight)) {
+                                hanoiBlocks[currentBlockIndex].y -= 2;
+                                animating = true;
+                            }
+                            else {
+                                animating = false;
+                                editGame = true;
+                                validated = false;
+                                moves++;
+                                hanoiBlocks[currentBlockIndex].y = hanoiBlocks[currentBlockIndex].initialY - overHeight;
+                                hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
+                                switchColumnChange = true;
+                                hanoiAnimations = [false, false, false, false];
+                            }
                         }
-                        else {
-                            animating = false;
-                            editGame = true;
-                            validated = false;
-                            moves++;
-                            hanoiBlocks[currentBlockIndex].y = hanoiBlocks[currentBlockIndex].initialY - overHeight;
-                            hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
-                            switchColumnChange = true;
-                            hanoiAnimations = [false, false, false, false];
-                        }
+                        else hanoiAnimations = [false, false, false, false];
                     }
-                    else hanoiAnimations = [false, false, false, false];
-                }
-                else if (hanoiAnimations[1]) {
-                    if (switchColumnChange && validateMovement()) {
-                        if (editGame) {
-                            currentGame[currentColumn].unshift(currentBlockIndex);
-                            currentGame[previousColumn].shift();
-                            currentBlockIndex = currentGame[currentColumn][0];
-                            editGame = false;
-                        }
-                        var height = (currentLevel - currentGame[currentColumn].length) * 10;
-                        var overHeight = height + 20;
-                        if ((hanoiBlocks[currentBlockIndex].y + 2) < (hanoiBlocks[currentBlockIndex].initialY + overHeight)) {
-                            hanoiBlocks[currentBlockIndex].y += 2;
-                            animating = true;
-                        }
-                        else {
-                            animating = false;
-                            moves++;
-                            hanoiBlocks[currentBlockIndex].y = hanoiBlocks[currentBlockIndex].initialY + overHeight;
-                            hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
-                            switchColumnChange = false;
+                    else if (hanoiAnimations[1]) {
+                        if (switchColumnChange && validateMovement()) {
+                            if (editGame) {
+                                currentGame[currentColumn].unshift(currentBlockIndex);
+                                currentGame[previousColumn].shift();
+                                currentBlockIndex = currentGame[currentColumn][0];
+                                editGame = false;
+                            }
+                            var height = (currentLevel - currentGame[currentColumn].length) * 10;
+                            var overHeight = height + 20;
+                            if ((hanoiBlocks[currentBlockIndex].y + 2) < (hanoiBlocks[currentBlockIndex].initialY + overHeight)) {
+                                hanoiBlocks[currentBlockIndex].y += 2;
+                                animating = true;
+                            }
+                            else {
+                                animating = false;
+                                moves++;
+                                hanoiBlocks[currentBlockIndex].y = hanoiBlocks[currentBlockIndex].initialY + overHeight;
+                                hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
+                                switchColumnChange = false;
 
-                            previousColumn = currentColumn;
-                            if (currentGame[0].length == 0 && currentGame[1].length == 0) {
-                                if (currentLevel < hanoiBlocks.length) {
-                                    lvlAnim = true;
-                                    lvlAnimCount = 0;
-                                    reset(currentLevel + 1);
+                                previousColumn = currentColumn;
+                                if (currentGame[0].length == 0 && currentGame[1].length == 0) {
+                                    if (currentLevel < hanoiBlocks.length) {
+                                        lvlAnim = true;
+                                        lvlAnimCount = 0;
+                                        reset(currentLevel + 1);
+                                    }
+                                    else {
+                                        // Put logic to end the game
+                                    }
+                                }
+
+                                hanoiAnimations = [false, false, false, false];
+                            }
+                        }
+                        else hanoiAnimations = [false, false, false, false];
+                    }
+                    else if (hanoiAnimations[2]) {
+                        if (switchColumnChange) {
+                            if (currentColumn > 0) {
+                                if ((hanoiBlocks[currentBlockIndex].x - 10) > (hanoiBlocks[currentBlockIndex].initialX - limit)) {
+                                    hanoiBlocks[currentBlockIndex].x -= 10;
+                                    hanoiBlocks[currentBlockIndex].y += 4.7;
+                                    animating = true;
                                 }
                                 else {
-                                    // Put logic to end the game
+                                    moves++;
+                                    animating = false;
+                                    currentColumn--;
+                                    validated = false;
+                                    hanoiBlocks[currentBlockIndex].x = hanoiBlocks[currentBlockIndex].initialX - limit;
+                                    hanoiBlocks[currentBlockIndex].initialX = hanoiBlocks[currentBlockIndex].x;
+                                    hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
+                                    hanoiAnimations = [false, false, false, false];
                                 }
                             }
-
+                            else hanoiAnimations = [false, false, false, false];
+                        }
+                        else {
+                            if (currentColumn > 0 && !changedColumn) {
+                                currentColumn--;
+                                previousColumn--;
+                                currentBlockIndex = currentGame[currentColumn][0];
+                                changedColumn = true;
+                            }
                             hanoiAnimations = [false, false, false, false];
                         }
                     }
-                    else hanoiAnimations = [false, false, false, false];
-                }
-                else if (hanoiAnimations[2]) {
-                    if (switchColumnChange) {
-                        if (currentColumn > 0) {
-                            if ((hanoiBlocks[currentBlockIndex].x - 10) > (hanoiBlocks[currentBlockIndex].initialX - limit)) {
-                                hanoiBlocks[currentBlockIndex].x -= 10;
-                                hanoiBlocks[currentBlockIndex].y += 4.7;
-                                animating = true;
+                    else if (hanoiAnimations[3]) {
+                        if (switchColumnChange) {
+                            if (currentColumn < 2) {
+                                if ((hanoiBlocks[currentBlockIndex].x + 10) < (hanoiBlocks[currentBlockIndex].initialX + limit)) {
+                                    hanoiBlocks[currentBlockIndex].x += 10;
+                                    hanoiBlocks[currentBlockIndex].y -= 4.7;
+                                    animating = true;
+                                }
+                                else {
+                                    moves++;
+                                    animating = false;
+                                    currentColumn++;
+                                    validated = false;
+                                    hanoiBlocks[currentBlockIndex].x = hanoiBlocks[currentBlockIndex].initialX + limit;
+                                    hanoiBlocks[currentBlockIndex].initialX = hanoiBlocks[currentBlockIndex].x;
+                                    hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
+                                    hanoiAnimations = [false, false, false, false];
+                                }
                             }
-                            else {
-                                moves++;
-                                animating = false;
-                                currentColumn--;
-                                validated = false;
-                                hanoiBlocks[currentBlockIndex].x = hanoiBlocks[currentBlockIndex].initialX - limit;
-                                hanoiBlocks[currentBlockIndex].initialX = hanoiBlocks[currentBlockIndex].x;
-                                hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
-                                hanoiAnimations = [false, false, false, false];
-                            }
+                            else hanoiAnimations = [false, false, false, false];
                         }
-                        else hanoiAnimations = [false, false, false, false];
-                    }
-                    else {
-                        if (currentColumn > 0 && !changedColumn) {
-                            currentColumn--;
-                            previousColumn--;
-                            currentBlockIndex = currentGame[currentColumn][0];
-                            changedColumn = true;
-                        }
-                        hanoiAnimations = [false, false, false, false];
-                    }
-                }
-                else if (hanoiAnimations[3]) {
-                    if (switchColumnChange) {
-                        if (currentColumn < 2) {
-                            if ((hanoiBlocks[currentBlockIndex].x + 10) < (hanoiBlocks[currentBlockIndex].initialX + limit)) {
-                                hanoiBlocks[currentBlockIndex].x += 10;
-                                hanoiBlocks[currentBlockIndex].y -= 4.7;
-                                animating = true;
-                            }
-                            else {
-                                moves++;
-                                animating = false;
+                        else {
+                            if (currentColumn < 2 && !changedColumn) {
                                 currentColumn++;
-                                validated = false;
-                                hanoiBlocks[currentBlockIndex].x = hanoiBlocks[currentBlockIndex].initialX + limit;
-                                hanoiBlocks[currentBlockIndex].initialX = hanoiBlocks[currentBlockIndex].x;
-                                hanoiBlocks[currentBlockIndex].initialY = hanoiBlocks[currentBlockIndex].y;
-                                hanoiAnimations = [false, false, false, false];
+                                previousColumn++;
+                                currentBlockIndex = currentGame[currentColumn][0];
+                                changedColumn = true;
                             }
+                            hanoiAnimations = [false, false, false, false];
                         }
-                        else hanoiAnimations = [false, false, false, false];
                     }
                     else {
-                        if (currentColumn < 2 && !changedColumn) {
-                            currentColumn++;
-                            previousColumn++;
-                            currentBlockIndex = currentGame[currentColumn][0];
-                            changedColumn = true;
-                        }
-                        hanoiAnimations = [false, false, false, false];
+                        changedColumn = false;
                     }
                 }
                 else {
-                    changedColumn = false;
+                    reset(currentLevel);
+                    resetGame = false;
                 }
             };
             var render = function () {
@@ -423,6 +435,7 @@ angular.module('haksGamesApp')
             restrict: 'E',
             link: function(scope, element) {
                 renderGame(scope, element);
-            }
+            },
+            templateUrl: '/views/games/hanoi.html'
         };
     });

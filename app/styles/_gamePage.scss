@@ -1,5 +1,19 @@
 .init-game {
   display: block;
-  text-align: center;
+}
+.game-container {
   background: black;
+  text-align: center;
+}
+.game-description--header {
+  color: white;
+}
+
+.game-description-container {
+  background: #3B3C40;
+  color: #BBBFD0;
+}
+
+.game-description {
+  @include center(1410px, 20px);
 }
