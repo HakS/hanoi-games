@@ -4,6 +4,9 @@
 .game-container {
   background: black;
   text-align: center;
+  canvas {
+    margin: 0 auto;
+  }
 }
 .game-description--header {
   color: white;
