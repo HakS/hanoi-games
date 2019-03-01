@@ -37,7 +37,7 @@ angular.module('haksGamesApp')
             replace: true,
             templateUrl: 'views/googleAds.html',
             controller: function () {
-                (adsbygoogle = window.adsbygoogle || []).push({});
+                // (adsbygoogle = window.adsbygoogle || []).push({});
             }
         };
     });

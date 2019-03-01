@@ -10,7 +10,10 @@
  */
 angular
     .module('haksGamesApp', ['ngRoute', 'djds4rce.angular-socialshare'])
-    .config(function ($routeProvider) {
+    .config(function ($routeProvider, $locationProvider) {
+        // $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix("");
+        // $locationProvider.html5Mode(true);
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
